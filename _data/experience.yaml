@@ -1,0 +1,31 @@
+experiences:
+- place: "VLILAB Lab"
+  time: "Sep. 2024 - Present"
+  title: "Research Associate"
+  subtitle: "Vision-Language Model"
+  category: "work"
+
+- place: "Sejong University"
+  time: "Sep. 2024 - Present"
+  title: "M.S. in AI and Robotics"
+  subtitle: "VLILAB Lab"
+  category: "school"
+
+- place: "CyberLogitec AI Center"
+  time: "June. 2022 - Aug. 2024"
+  title: "Research Associate"
+  subtitle: "Smart Factory, Generative AI"
+  category: "work"
+
+- place: "Innovation FabLab"
+  time: "Oct. 2022 - Oct. 2023"
+  title: "Research Associate"
+  subtitle: "Video Super-Resolution Model"
+  category: "work"
+
+- place: "University of Technology"
+  time: "Aug. 2019 - Nov. 2023"
+  title: "B.E. in Computer Science"
+  subtitle: "VNU-HCMUT OISP English program"
+  category: "school"
+

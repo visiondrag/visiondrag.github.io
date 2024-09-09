@@ -1,0 +1,8 @@
+@misc{hong2023gullible,
+    title={Why So Gullible? Enhancing the Robustness of Retrieval-Augmented Models against Counterfactual Noise},
+    author={Giwon Hong and Jeonghwan Kim and Junmo Kang and Sung-Hyon Myaeng and Joyce Jiyoung Whang},
+    year={2023},
+    eprint={2305.01579},
+    archivePrefix={arXiv},
+    primaryClass={cs.CL}
+}
