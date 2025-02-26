@@ -1,0 +1,18 @@
+@InProceedings{10.1007/978-981-96-0695-5_25,
+    author="Vo, Ngoc-Sang
+    and Nguyen, Ngoc-Thanh-Xuan
+    and Pham, Tan-Phuoc
+    and Nguyen, Quoc-Viet
+    and Pham, Hoang-Anh",
+    editor="Sombattheera, Chattrakul
+    and Weng, Paul
+    and Pang, Jun",
+    title="Enhancing AI Chatbots for Mental Health Support: A Comprehensive Approach",
+    booktitle="Multi-disciplinary Trends in Artificial Intelligence",
+    year="2025",
+    publisher="Springer Nature Singapore",
+    address="Singapore",
+    pages="311--322",
+    abstract="In recent years, there has been a significant increase in the demand for mental health assistance. Mental disorders such as anxiety disorders, depressive disorders, and attention-deficit hyperactivity disorder have become more common and have a negative impact on individuals' well-being, as well as contributing to economic losses worldwide. However, mental health services often struggle to provide adequate support due to factors such as lack of resources, patients' fear of stigma, poverty, social exclusion, and diverse theoretical frameworks for mental health disorders. Thankfully, recent advancements in Large Language Models have opened up exciting possibilities in fields such as healthcare, finance, and education. Recognizing this potential, we propose developing an innovative chatbot application utilizing a customized Retrieval-Augmented Generation approach. Through this, the chatbot can retrieve pertinent information and craft tailored responses, providing a supportive and enlightening interaction. Moreover, this application can facilitate access to professional care by linking users with nearby psychiatrists or psychology centers, ensuring timely and accessible assistance. This study represents a significant advance in integrating advanced AI technologies into mental health support systems, providing practical solutions to current challenges in the field.",
+    isbn="978-981-96-0695-5"
+}
