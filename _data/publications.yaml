@@ -9,7 +9,7 @@ papers:
 
   - title: "Enhancing AI Chatbots for Mental Health Support: A Comprehensive Approach"
     image: "/assets/publications/2024_mental_health_chatbot/main.png"
-    authors: "Ngoc-Sang Vo, Ngoc-Thanh-Xuan Nguyen, Tan-Phuoc Pham, <b>Quoc-Viet Nguyen<b>, Hoang-Anh Pham" 
+    authors: "Ngoc-Sang Vo, Ngoc-Thanh-Xuan Nguyen, Tan-Phuoc Pham, <b>Quoc-Viet Nguyen</b>, Hoang-Anh Pham" 
     venue: "MIWAI2024"
     paper_pdf: "https://link.springer.com/chapter/10.1007/978-981-96-0695-5_25"
     bibtex: "/assets/publications/2024_mental_health_chatbot/bibtex.txt"
