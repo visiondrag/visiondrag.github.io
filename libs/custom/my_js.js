@@ -17,7 +17,55 @@ $(document).ready(function() {
         "/": '&#x2F;'
       }
 
+  // Dark mode
+  function initDarkMode() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateToggleLabel(saved);
+  }
+
+  function updateToggleLabel(theme) {
+    var btn = document.getElementById('dark-toggle');
+    if (btn) btn.textContent = theme === 'dark' ? '☀ Light' : '☾ Dark';
+  }
+
+  $('#dark-toggle').on('click', function() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateToggleLabel(next);
+  });
+
+  // Scroll-triggered fade-in via Intersection Observer
+  function initFadeIn() {
+    if (!window.IntersectionObserver) {
+      // Fallback: show everything immediately
+      $('.docs-section, .paper, .header').addClass('visible');
+      return;
+    }
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.docs-section, .header').forEach(function(el) {
+      observer.observe(el);
+    });
+    // Papers animate individually with a stagger
+    document.querySelectorAll('.paper').forEach(function(el, i) {
+      el.style.transitionDelay = (i * 0.08) + 's';
+      observer.observe(el);
+    });
+  }
+
   function init() {
+    initDarkMode();
+    initFadeIn();
     $window.on('scroll', onScroll)
     $window.on('resize', resize)
     $popoverLink.on('click', openPopover)
