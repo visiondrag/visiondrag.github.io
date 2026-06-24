@@ -33,34 +33,62 @@ a {
 
 /* ===== Scroll-triggered fade-in ===== */
 .docs-section,
-.paper,
-.header {
+.paper {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.55s ease, transform 0.55s ease;
 }
 .docs-section.visible,
-.paper.visible,
-.header.visible {
+.paper.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* ===== Dark mode toggle button ===== */
+/* ===== Space hero (Three.js canvas wrapper) ===== */
+.space-hero {
+  position: relative;
+  overflow: hidden;
+  background: #030810;
+  border-radius: 14px;
+  margin-bottom: 0;
+}
+#space-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+/* Header content always has space/dark colours since bg is always dark */
+.space-hero .header {
+  position: relative;
+  z-index: 1;
+  margin-top: 0 !important;
+  padding: 4.5rem 1rem;
+}
+.space-hero .main-description h1 { color: #e6edf3; }
+.space-hero .main-description p  { color: #adbac7; }
+.space-hero .main-description .fa,
+.space-hero .main-description .ai { color: #768390; font-size: 22px; margin-top: 5px; }
+.space-hero .main-description a   { color: #58a6ff; }
+.space-hero img { border: 2px solid rgba(88,166,255,0.25); }
+
+/* ===== Dark mode toggle — icon only ===== */
 .dark-toggle {
   background: none;
-  border: 1px solid var(--border);
-  border-radius: 20px;
+  border: none;
   cursor: pointer;
-  padding: 4px 10px;
-  font-size: 14px;
+  font-size: 18px;
   line-height: 6.5rem;
   color: var(--text);
-  transition: border-color 0.3s, color 0.3s;
+  padding: 0 8px;
+  opacity: 0.65;
+  transition: opacity 0.2s, color 0.2s;
   vertical-align: middle;
 }
 .dark-toggle:hover {
-  border-color: var(--accent);
+  opacity: 1;
   color: var(--accent);
 }
 
@@ -160,8 +188,8 @@ h4 {
 
 /* Larger than phone */
 @media (min-width: 550px) {
-  .header {
-    margin-top: 5rem; }
+  .space-hero .header {
+    padding: 5rem 1.5rem; }
 }
 
 /* Larger than tablet */

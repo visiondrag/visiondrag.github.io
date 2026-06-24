@@ -26,7 +26,7 @@ $(document).ready(function() {
 
   function updateToggleLabel(theme) {
     var btn = document.getElementById('dark-toggle');
-    if (btn) btn.textContent = theme === 'dark' ? '☀ Light' : '☾ Dark';
+    if (btn) btn.textContent = theme === 'dark' ? '☀' : '☾';
   }
 
   $('#dark-toggle').on('click', function() {
@@ -41,7 +41,7 @@ $(document).ready(function() {
   function initFadeIn() {
     if (!window.IntersectionObserver) {
       // Fallback: show everything immediately
-      $('.docs-section, .paper, .header').addClass('visible');
+      $('.docs-section, .paper').addClass('visible');
       return;
     }
     var observer = new IntersectionObserver(function(entries) {
@@ -53,7 +53,7 @@ $(document).ready(function() {
       });
     }, { threshold: 0.08 });
 
-    document.querySelectorAll('.docs-section, .header').forEach(function(el) {
+    document.querySelectorAll('.docs-section').forEach(function(el) {
       observer.observe(el);
     });
     // Papers animate individually with a stagger
