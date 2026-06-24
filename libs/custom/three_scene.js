@@ -9,108 +9,194 @@
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   // ── Scene & Camera ────────────────────────────────────────────────────────
-  var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(58, 1, 0.1, 500);
-  camera.position.set(-1.5, 0.4, 8);
-  camera.lookAt(0, 0, 0);
+  var scene  = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(60, 1, 0.1, 500);
+  // Camera positioned left-of-centre so the solar system fills the right side
+  var CAM = { x: -1.2, y: 1.4, z: 8.0 };
+  var LOOK = new THREE.Vector3(2.0, -0.3, 0);
+  camera.position.set(CAM.x, CAM.y, CAM.z);
+  camera.lookAt(LOOK);
 
   // ── Starfield ─────────────────────────────────────────────────────────────
   (function () {
     var pos = [];
     for (var i = 0; i < 3000; i++) {
-      var r = 55 + Math.random() * 90;
+      var r = 60 + Math.random() * 100;
       var t = Math.random() * Math.PI * 2;
       var p = Math.acos(2 * Math.random() - 1);
-      pos.push(
-        r * Math.sin(p) * Math.cos(t),
-        r * Math.sin(p) * Math.sin(t),
-        r * Math.cos(p)
-      );
+      pos.push(r * Math.sin(p) * Math.cos(t), r * Math.sin(p) * Math.sin(t), r * Math.cos(p));
     }
-    var geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    scene.add(new THREE.Points(geo,
+    var g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    scene.add(new THREE.Points(g,
       new THREE.PointsMaterial({ color: 0xffffff, size: 1.3, sizeAttenuation: false })));
   })();
 
-  // ── Earth group ───────────────────────────────────────────────────────────
-  var EARTH_R   = 1.4;
-  var ORBIT_R   = 2.55;
-  var ORBIT_TILT = 0.52; // ~30°
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function solid(r, col) {
+    return new THREE.Mesh(
+      new THREE.SphereGeometry(r, 32, 32),
+      new THREE.MeshBasicMaterial({ color: col }));
+  }
+  function wire(r, col, op) {
+    return new THREE.Mesh(
+      new THREE.SphereGeometry(r, 20, 13),
+      new THREE.MeshBasicMaterial({ color: col, wireframe: true, transparent: true, opacity: op }));
+  }
+  function glowShell(r, col, op) {
+    return new THREE.Mesh(
+      new THREE.SphereGeometry(r, 24, 24),
+      new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: op, side: THREE.BackSide }));
+  }
+  // LineLoop orbit path — always 1 px wide, visible at any scale
+  function orbitLine(r, col, op) {
+    var pts = [];
+    for (var i = 0; i < 128; i++) {
+      var a = (i / 128) * Math.PI * 2;
+      pts.push(r * Math.cos(a), 0, r * Math.sin(a));
+    }
+    var g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+    return new THREE.LineLoop(g,
+      new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: op }));
+  }
 
-  var earthGroup = new THREE.Group();
-  earthGroup.position.set(2.6, -0.2, 0);
-  scene.add(earthGroup);
+  // ── Solar system group ────────────────────────────────────────────────────
+  var solar = new THREE.Group();
+  solar.position.set(2.8, -0.4, 0);
+  solar.rotation.x = 0.42;   // tilt ecliptic for 3-D perspective
+  scene.add(solar);
 
-  // Deep-space ocean core
-  earthGroup.add(new THREE.Mesh(
-    new THREE.SphereGeometry(EARTH_R, 48, 48),
-    new THREE.MeshBasicMaterial({ color: 0x020c18 })
-  ));
+  // ── Sun ──────────────────────────────────────────────────────────────────
+  var sunCore = solid(0.52, 0xffdd00);
+  solar.add(sunCore);
+  solar.add(glowShell(0.72, 0xff9900, 0.14));
+  solar.add(glowShell(0.98, 0xffbb00, 0.05));
 
-  // Lat/lon wireframe grid
-  earthGroup.add(new THREE.Mesh(
-    new THREE.SphereGeometry(EARTH_R * 1.006, 22, 14),
-    new THREE.MeshBasicMaterial({ color: 0x1565c0, wireframe: true, transparent: true, opacity: 0.45 })
-  ));
+  // ── Earth ────────────────────────────────────────────────────────────────
+  var ED = 2.4;
+  solar.add(orbitLine(ED, 0x4488ff, 0.35));
 
-  // Thin atmospheric glow (backside)
-  earthGroup.add(new THREE.Mesh(
-    new THREE.SphereGeometry(EARTH_R * 1.18, 32, 32),
-    new THREE.MeshBasicMaterial({ color: 0x1e8fff, transparent: true, opacity: 0.07, side: THREE.BackSide })
-  ));
+  var earthOrbit = new THREE.Object3D();
+  solar.add(earthOrbit);
 
-  // ── Orbit ring (static inside earthGroup) ─────────────────────────────────
-  var orbitRingMesh = new THREE.Mesh(
-    new THREE.TorusGeometry(ORBIT_R, 0.009, 8, 128),
-    new THREE.MeshBasicMaterial({ color: 0x58a6ff, transparent: true, opacity: 0.3 })
-  );
-  // Torus default is XY plane; rotate to XZ plane then tilt to match orbital plane
-  orbitRingMesh.rotation.x = Math.PI / 2;
-  orbitRingMesh.rotation.z = ORBIT_TILT;
-  earthGroup.add(orbitRingMesh);
+  var earthNode = new THREE.Object3D();
+  earthNode.position.x = ED;
+  earthOrbit.add(earthNode);
 
-  // ── Orbital plane pivot (only satellite inside, tilted same angle) ─────────
-  var orbitPlane = new THREE.Object3D();
-  orbitPlane.rotation.z = ORBIT_TILT;
-  earthGroup.add(orbitPlane);
+  var earthCore = solid(0.30, 0x020c18);
+  earthNode.add(earthCore);
+  var earthWire = wire(0.305, 0x1565c0, 0.55);
+  earthNode.add(earthWire);
+  earthNode.add(glowShell(0.37, 0x1e8fff, 0.09));
 
-  // ── Satellite ─────────────────────────────────────────────────────────────
-  var sat = new THREE.Group();
-  sat.position.set(ORBIT_R, 0, 0);
-  orbitPlane.add(sat);
+  // ── Moon ─────────────────────────────────────────────────────────────────
+  var MD = 0.62;
+  earthNode.add(orbitLine(MD, 0xcccccc, 0.30));
 
-  // Bus body
-  sat.add(new THREE.Mesh(
-    new THREE.BoxGeometry(0.1, 0.1, 0.27),
-    new THREE.MeshBasicMaterial({ color: 0xcccccc })
-  ));
+  var moonOrbit = new THREE.Object3D();
+  earthNode.add(moonOrbit);
 
-  // Solar panels
-  var panelMat = new THREE.MeshBasicMaterial({ color: 0x1a3fa0 });
-  [-0.35, 0.35].forEach(function (x) {
-    var p = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.006, 0.16), panelMat);
-    p.position.x = x;
-    sat.add(p);
-  });
+  var moonNode = new THREE.Object3D();
+  moonNode.position.x = MD;
+  moonOrbit.add(moonNode);
 
-  // Panel struts
-  var strutMat = new THREE.MeshBasicMaterial({ color: 0x888888 });
-  [-0.17, 0.17].forEach(function (x) {
-    var s = new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.013, 0.013), strutMat);
-    s.position.x = x;
-    sat.add(s);
-  });
+  moonNode.add(solid(0.10, 0x888888));
+  moonNode.add(glowShell(0.13, 0xaaaaaa, 0.05));
 
-  // Dish antenna (cone pointing up)
-  var dish = new THREE.Mesh(
-    new THREE.ConeGeometry(0.035, 0.1, 8),
-    new THREE.MeshBasicMaterial({ color: 0xeeeeee })
-  );
-  dish.position.y = 0.1;
-  sat.add(dish);
+  // ── Mars ─────────────────────────────────────────────────────────────────
+  var RD = 3.9;
+  solar.add(orbitLine(RD, 0xff5533, 0.28));
 
-  // ── Mouse parallax ────────────────────────────────────────────────────────
+  var marsOrbit = new THREE.Object3D();
+  marsOrbit.rotation.y = 1.3;   // start offset
+  solar.add(marsOrbit);
+
+  var marsNode = new THREE.Object3D();
+  marsNode.position.x = RD;
+  marsOrbit.add(marsNode);
+
+  var marsCore = solid(0.22, 0x1a0500);
+  marsNode.add(marsCore);
+  var marsWire = wire(0.224, 0xcc3300, 0.60);
+  marsNode.add(marsWire);
+  marsNode.add(glowShell(0.27, 0xff4411, 0.07));
+
+  // ── Spacecraft pool ───────────────────────────────────────────────────────
+  var _wp = new THREE.Vector3();
+  function wpos(node) { node.getWorldPosition(_wp); return _wp.clone(); }
+
+  function buildCraft() {
+    var g = new THREE.Group();
+    // fuselage
+    g.add(new THREE.Mesh(
+      new THREE.BoxGeometry(0.038, 0.038, 0.15),
+      new THREE.MeshBasicMaterial({ color: 0xe0e0e0 })));
+    // wings
+    [-0.05, 0.05].forEach(function (x) {
+      var w = new THREE.Mesh(
+        new THREE.BoxGeometry(0.10, 0.005, 0.055),
+        new THREE.MeshBasicMaterial({ color: 0xaaaaaa }));
+      w.position.x = x;
+      g.add(w);
+    });
+    // engine exhaust glow
+    var eng = new THREE.Mesh(
+      new THREE.SphereGeometry(0.024, 8, 8),
+      new THREE.MeshBasicMaterial({ color: 0x55aaff }));
+    eng.position.z = 0.09;
+    g.add(eng);
+
+    g.visible = false;
+    scene.add(g);   // in scene space — matches wpos() coordinate frame
+    return { mesh: g, curve: null, t: 0, speed: 0, active: false };
+  }
+
+  var pool = [buildCraft(), buildCraft()];
+
+  var BODIES    = { earth: earthNode, mars: marsNode, moon: moonNode };
+  var BODY_KEYS = ['earth', 'mars', 'moon'];
+  var lastLaunch = -3.5;   // first craft ~3.5 s in
+  var nextDelay  = 3.5;
+
+  var _lk = new THREE.Vector3();
+  function tickCraft(dt) {
+    pool.forEach(function (c) {
+      if (!c.active) return;
+      c.t += c.speed * dt;
+      if (c.t >= 1.0) { c.active = false; c.mesh.visible = false; return; }
+      c.mesh.position.copy(c.curve.getPoint(c.t));
+      c.curve.getPoint(Math.min(c.t + 0.025, 1.0), _lk);
+      c.mesh.lookAt(_lk);
+    });
+  }
+
+  function launchCraft() {
+    var craft = pool.find(function (c) { return !c.active; });
+    if (!craft) return;
+
+    var fromKey = BODY_KEYS[Math.floor(Math.random() * BODY_KEYS.length)];
+    var rest    = BODY_KEYS.filter(function (k) { return k !== fromKey; });
+    var toKey   = rest[Math.floor(Math.random() * rest.length)];
+
+    var from = wpos(BODIES[fromKey]);
+    var to   = wpos(BODIES[toKey]);
+    var dist = from.distanceTo(to);
+
+    // Bezier control point: arc outward perpendicular to the route
+    var mid = from.clone().add(to).multiplyScalar(0.5);
+    var dir = to.clone().sub(from).normalize();
+    var perp = new THREE.Vector3(-dir.z, 0.5 + Math.random() * 0.5, dir.x).normalize();
+    mid.addScaledVector(perp, dist * 0.50);
+
+    craft.curve  = new THREE.QuadraticBezierCurve3(from, mid, to);
+    craft.t      = 0;
+    craft.speed  = 0.28 / Math.max(dist, 0.4);   // t-units per second
+    craft.active = true;
+    craft.mesh.visible = true;
+  }
+
+  // ── Mouse parallax — move camera, not scene ───────────────────────────────
   var mxT = 0, myT = 0, mx = 0, my = 0;
   document.addEventListener('mousemove', function (e) {
     mxT = (e.clientX / window.innerWidth  - 0.5);
@@ -121,8 +207,8 @@
   function resize() {
     var hero = canvas.parentElement;
     var w = hero ? hero.offsetWidth  : 800;
-    var h = hero ? hero.offsetHeight : 340;
-    if (h < 180) h = 340;
+    var h = hero ? hero.offsetHeight : 360;
+    if (h < 180) h = 360;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -131,19 +217,44 @@
   resize();
 
   // ── Animation loop ────────────────────────────────────────────────────────
+  var clock   = new THREE.Clock();
+  var elapsed = 0;
+
   function animate() {
     requestAnimationFrame(animate);
+    var dt = Math.min(clock.getDelta(), 0.05);
+    elapsed += dt;
 
+    // Smooth camera parallax
     mx += (mxT - mx) * 0.04;
     my += (myT - my) * 0.04;
+    camera.position.x += (CAM.x + mx * 0.8  - camera.position.x) * 0.05;
+    camera.position.y += (CAM.y - my * 0.4  - camera.position.y) * 0.05;
+    camera.lookAt(LOOK);
 
-    earthGroup.rotation.y += 0.0022;   // earth spin
-    orbitPlane.rotation.y += 0.013;    // satellite orbit
-    sat.rotation.z          += 0.022;  // slow panel tumble
+    // Sun pulse
+    var pulse = 1 + 0.02 * Math.sin(elapsed * 2.1);
+    sunCore.scale.setScalar(pulse);
 
-    // Gentle scene parallax on mouse
-    scene.rotation.y = mx * 0.18;
-    scene.rotation.x = -my * 0.09;
+    // Orbits  (using real period ratios: Moon≈27d, Earth=365d, Mars=687d)
+    earthOrbit.rotation.y += 0.0075;
+    moonOrbit.rotation.y  += 0.031;
+    marsOrbit.rotation.y  += 0.0040;
+
+    // Axial spin
+    sunCore.rotation.y   += 0.004;
+    earthCore.rotation.y += 0.011;
+    earthWire.rotation.y += 0.011;
+    marsCore.rotation.y  += 0.008;
+    marsWire.rotation.y  += 0.008;
+
+    // Spacecraft
+    if (elapsed - lastLaunch > nextDelay) {
+      launchCraft();
+      lastLaunch = elapsed;
+      nextDelay  = 8 + Math.random() * 9;
+    }
+    tickCraft(dt);
 
     renderer.render(scene, camera);
   }
