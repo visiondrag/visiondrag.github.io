@@ -108,6 +108,16 @@
       </section>
     </div>
 
+    <!-- Scene panels: solar system (left) and Mars rover (right) -->
+    <div class="scene-panels">
+      <div class="scene-panel">
+        <canvas id="solar-canvas"></canvas>
+      </div>
+      <div class="scene-panel">
+        <canvas id="rover-canvas"></canvas>
+      </div>
+    </div>
+
     <div class="navbar-spacer"></div>
     <nav class="navbar">
       <div class="container">
@@ -163,6 +173,8 @@
 
   <!-- Three.js Space Scene -->
   <script src={{ "/libs/custom/three_scene.js" | prepend: site.baseurl }}></script>
+  <script src={{ "/libs/custom/solar_scene.js" | prepend: site.baseurl }}></script>
+  <script src={{ "/libs/custom/rover_scene.js" | prepend: site.baseurl }}></script>
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
