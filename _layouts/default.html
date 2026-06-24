@@ -44,9 +44,9 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href={{ "/libs/external/timeline.css" | prepend: site.baseurl }}>
 
-  <!-- Three.js
+  <!-- Three.js (local, CDN fallback)
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+  <script src={{ "/libs/external/three.min.js" | prepend: site.baseurl }}></script>
 
   <!-- Scripts
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
