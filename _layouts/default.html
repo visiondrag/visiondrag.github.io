@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 
   <!-- Basic Page Needs
@@ -44,6 +44,10 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href={{ "/libs/external/timeline.css" | prepend: site.baseurl }}>
 
+  <!-- Three.js (local, CDN fallback)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src={{ "/libs/external/three.min.js" | prepend: site.baseurl }}></script>
+
   <!-- Scripts
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <!--<link rel="stylesheet" href={{ "/libs/external/github-prettify-theme.css" | prepend: site.baseurl }}>-->
@@ -61,45 +65,48 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
 
-    <section class="header">
-      <div class="row">
-        <div class="three columns">
-          <div><img class="u-max-full-width" style="border-radius: 1rem;" src='{{ site.baseurl }}{{ site.data.main_info.profile_pic }}'></div>
+    <div class="space-hero">
+      <canvas id="space-canvas"></canvas>
+      <section class="header">
+        <div class="row">
+          <div class="three columns">
+            <div><img class="u-max-full-width" style="border-radius: 1rem;" src='{{ site.baseurl }}{{ site.data.main_info.profile_pic }}'></div>
+          </div>
+          <div class="nine columns main-description">
+              <h1>{{ site.data.main_info.name }}</h1>
+              <p>{{ site.data.main_info.title }}</p>
+              <p>{{ site.data.main_info.dept }}</p>
+              <p>{{ site.data.main_info.office }}</p>
+              <p>{{ site.data.main_info.email }}</p>
+              <p>
+                <span onclick="window.open('{{ site.data.main_info.cv }}')" style="cursor: pointer">
+                  <i class="fa ai ai-cv-square" aria-hidden="true"></i>
+                </span>
+
+                <span onclick="window.open('{{ site.data.main_info.semantic_scholar }}')" style="cursor: pointer">
+                  <i class="ai fa ai-semantic-scholar-square" aria-hidden="true"></i>
+                </span>
+
+                <span onclick="window.open('{{ site.data.main_info.google_scholar }}')" style="cursor: pointer">
+                  <i class="ai fa ai-google-scholar-square" aria-hidden="true"></i>
+                </span>
+
+                <span onclick="window.open('{{ site.data.main_info.twitter }}')" style="cursor: pointer">
+                  <i class="fa fa-twitter-square" aria-hidden="true"></i>
+                </span>
+
+                <span onclick="window.open('{{ site.data.main_info.github }}')" style="cursor: pointer">
+                  <i class="fa fa-github-square" aria-hidden="true"></i>
+                </span>
+
+                <span onclick="window.open('{{ site.data.main_info.linkedin }}')" style="cursor: pointer">
+                  <i class="fa fa-linkedin-square" aria-hidden="true"></i>
+                </span>
+              </p>
+          </div>
         </div>
-        <div class="nine columns main-description">
-            <h1>{{ site.data.main_info.name }}</h1>
-            <p>{{ site.data.main_info.title }}</p>
-            <p>{{ site.data.main_info.dept }}</p>
-            <p>{{ site.data.main_info.office }}</p>
-            <p>{{ site.data.main_info.email }}</p>
-            <p>
-              <span onclick="window.open('{{ site.data.main_info.cv }}')" style="cursor: pointer">
-                <i class="fa ai ai-cv-square" aria-hidden="true"></i>
-              </span>
-              
-              <span onclick="window.open('{{ site.data.main_info.semantic_scholar }}')" style="cursor: pointer">
-                <i class="ai fa ai-semantic-scholar-square" aria-hidden="true"></i>
-              </span>
-
-              <span onclick="window.open('{{ site.data.main_info.google_scholar }}')" style="cursor: pointer">
-                <i class="ai fa ai-google-scholar-square" aria-hidden="true"></i>
-              </span>
-
-              <span onclick="window.open('{{ site.data.main_info.twitter }}')" style="cursor: pointer">
-                <i class="fa fa-twitter-square" aria-hidden="true"></i>
-              </span>    
-
-              <span onclick="window.open('{{ site.data.main_info.github }}')" style="cursor: pointer">
-                <i class="fa fa-github-square" aria-hidden="true"></i>
-              </span>
-
-              <span onclick="window.open('{{ site.data.main_info.linkedin }}')" style="cursor: pointer">
-                <i class="fa fa-linkedin-square" aria-hidden="true"></i>
-              </span>
-            </p>
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
     <div class="navbar-spacer"></div>
     <nav class="navbar">
@@ -109,6 +116,9 @@
           <li class="navbar-item"><a class="navbar-link" href={{ "/index.html#education" | prepend: site.baseurl }}>Education</a></li>
           <li class="navbar-item"><a class="navbar-link" href={{ "/index.html#publications" | prepend: site.baseurl }}>Publications</a></li>
           <li class="navbar-item"><a class="navbar-link" href={{ "/index.html#resume" | prepend: site.baseurl }}>Vitae</a></li>
+          <li class="navbar-item" style="float:right;">
+            <button id="dark-toggle" class="dark-toggle" aria-label="Toggle dark mode">☾</button>
+          </li>
         </ul>
       </div>
     </nav>
@@ -150,6 +160,9 @@
 
   <!-- Google Analytics -->
   {% include google_analytics.html %}
+
+  <!-- Three.js Space Scene -->
+  <script src={{ "/libs/custom/three_scene.js" | prepend: site.baseurl }}></script>
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->

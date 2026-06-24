@@ -1,17 +1,129 @@
+/* ===== CSS Variables (light/dark) ===== */
+:root {
+  --bg: #fff;
+  --text: #222;
+  --text-muted: rgba(0,0,0,0.4);
+  --border: #eee;
+  --navbar-bg: #fff;
+  --icon-color: #646464;
+  --accent: #33C3F0;
+  --link: #1EAEDB;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --text: #e6edf3;
+  --text-muted: rgba(200,220,240,0.5);
+  --border: #30363d;
+  --navbar-bg: #161b22;
+  --icon-color: #8b949e;
+  --accent: #58a6ff;
+  --link: #58a6ff;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: var(--link);
+}
+
+/* ===== Scroll-triggered fade-in ===== */
+.docs-section,
+.paper {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.docs-section.visible,
+.paper.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Space hero (Three.js canvas wrapper) ===== */
+.space-hero {
+  position: relative;
+  overflow: hidden;
+  background: #030810;
+  border-radius: 14px;
+  margin-bottom: 0;
+  min-height: 480px;
+}
+#space-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+/* Header content always has space/dark colours since bg is always dark */
+.space-hero .header {
+  position: relative;
+  z-index: 1;
+  margin-top: 0 !important;
+  padding: 4.5rem 1rem;
+}
+.space-hero .main-description h1 { color: #e6edf3; }
+.space-hero .main-description p  { color: #adbac7; }
+.space-hero .main-description .fa,
+.space-hero .main-description .ai { color: #768390; font-size: 22px; margin-top: 5px; }
+.space-hero .main-description a   { color: #58a6ff; }
+.space-hero img { border: 2px solid rgba(88,166,255,0.25); }
+
+/* ===== Dark mode toggle — icon only ===== */
+.dark-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 6.5rem;
+  color: var(--text);
+  padding: 0 8px;
+  opacity: 0.65;
+  transition: opacity 0.2s, color 0.2s;
+  vertical-align: middle;
+}
+.dark-toggle:hover {
+  opacity: 1;
+  color: var(--accent);
+}
+
+/* ===== Research tags ===== */
+.research-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 0.8em;
+}
+.research-tag {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 14px;
+  padding: 2px 12px;
+  font-size: 12px;
+  letter-spacing: .05rem;
+}
+
 h4 {
   letter-spacing: .1rem; }
 .container {
   max-width: 800px; }
 .header {
   margin-top: 60px;
-  margin-bottom: 60px; 
+  margin-bottom: 60px;
   text-align: left; }
 .main-description h1 {
   margin-bottom: 0px; }
 .main-description p {
   margin-bottom: 0px; }
 .main-description .fa {
-  color: #646464;
+  color: var(--icon-color);
   font-size: 22px;
   margin-top: 5px; }
 .paper {
@@ -36,15 +148,17 @@ h4 {
   letter-spacing: .2rem;
   font-weight: 600; }
 .docs-section {
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border);
   padding: 4rem 0;
   margin-bottom: 0;}
 .footer {
   text-align: center;
-  color: rgba(0, 0, 0, 0.4);
-  border-top: 1px solid #eee;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
   padding: 15px 0 40px 0;
   margin-bottom: 0;}
+.footer a {
+  color: var(--text-muted); }
 .navbar {
   display: none; }
 .title-subtitle h3 {
@@ -75,8 +189,8 @@ h4 {
 
 /* Larger than phone */
 @media (min-width: 550px) {
-  .header {
-    margin-top: 5rem; }
+  .space-hero .header {
+    padding: 5rem 1.5rem; }
 }
 
 /* Larger than tablet */
@@ -89,10 +203,11 @@ h4 {
     display: block;
     width: 100%;
     height: 6.5rem;
-    background: #fff;
+    background: var(--navbar-bg);
     z-index: 99;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee; }
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s ease; }
   .navbar-spacer {
     display: none; }
   .navbar > .container {
@@ -112,13 +227,14 @@ h4 {
     margin-right: 35px;
     text-decoration: none;
     line-height: 6.5rem;
-    color: #222; }
+    color: var(--text); }
   .navbar-link.active {
-    color: #33C3F0; }
+    color: var(--accent); }
   .has-docked-nav .navbar {
     position: fixed;
     top: 0;
-    left: 0; }
+    left: 0;
+    background: var(--navbar-bg); }
   .has-docked-nav .navbar-spacer {
     display: block; }
   /* Re-overiding the width 100% declaration to match size of % based container */
@@ -134,8 +250,8 @@ h4 {
     position: absolute;
     top: 0;
     left: 0;
-    background: #fff;
-    border: 1px solid #eee;
+    background: var(--navbar-bg);
+    border: 1px solid var(--border);
     border-radius: 4px;
     top: 92%;
     left: -50%;
@@ -171,10 +287,10 @@ h4 {
     margin: 0; }
   .popover-link {
     position: relative;
-    color: #222;
+    color: var(--text);
     display: block;
     padding: 8px 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border);
     text-decoration: none;
     text-transform: uppercase;
     font-size: 1.0rem;
