@@ -54,7 +54,34 @@ a {
   min-height: 340px;
 }
 
-/* ===== Disjoint scene panels (solar system + rover) ===== */
+/* ===== NASA interactive planet viewers ===== */
+.nasa-planet-viewer {
+  margin: 10px 0 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(88, 166, 255, 0.12);
+}
+.nasa-planet-viewer model-viewer {
+  width: 100%;
+  height: 520px;
+  display: block;
+  --poster-color: #000;
+  --progress-bar-color: #58a6ff;
+}
+.nasa-planet-label {
+  margin: 0;
+  padding: 10px 16px 6px;
+  font-size: 10px;
+  letter-spacing: 0.18rem;
+  text-transform: uppercase;
+  color: rgba(180, 210, 240, 0.5);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+  background: #000;
+}
+
+/* ===== Scene panels (now holds NASA planet viewers) ===== */
 .scene-panels {
   display: flex;
   gap: 10px;
@@ -65,8 +92,8 @@ a {
   position: relative;
   border-radius: 14px;
   overflow: hidden;
-  height: 280px;
-  background: #020810;
+  height: 380px;
+  background: #000;
 }
 .scene-panel canvas {
   position: absolute;
@@ -74,9 +101,26 @@ a {
   width: 100%; height: 100%;
   display: block;
 }
+.nasa-panel model-viewer {
+  width: 100%;
+  height: 100%;
+  display: block;
+  --poster-color: #000;
+  --progress-bar-color: #58a6ff;
+}
+.nasa-panel .nasa-planet-label {
+  position: absolute;
+  bottom: 10px;
+  left: 0; right: 0;
+  text-align: center;
+  z-index: 2;
+  pointer-events: none;
+  background: transparent;
+  padding: 0;
+}
 @media (max-width: 549px) {
   .scene-panels { flex-direction: column; }
-  .scene-panel  { height: 220px; }
+  .scene-panel  { height: 300px; }
 }
 #space-canvas {
   position: absolute;
