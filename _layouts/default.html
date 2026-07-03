@@ -108,6 +108,14 @@
       </section>
     </div>
 
+    <!-- Full-width planet showcase: Earth · Moon · Mars -->
+    <div class="planet-showcase">
+      <canvas id="planet-canvas"></canvas>
+      <span class="planet-label" style="left:30%">Earth</span>
+      <span class="planet-label" style="left:50%">Moon</span>
+      <span class="planet-label" style="left:70%">Mars</span>
+    </div>
+
     <!-- Scene panels: solar system (left) and Mars rover (right) -->
     <div class="scene-panels">
       <div class="scene-panel">
@@ -175,6 +183,7 @@
   <script src={{ "/libs/custom/three_scene.js" | prepend: site.baseurl }}></script>
   <script src={{ "/libs/custom/solar_scene.js" | prepend: site.baseurl }}></script>
   <script src={{ "/libs/custom/rover_scene.js" | prepend: site.baseurl }}></script>
+  <script src={{ "/libs/custom/planet_scene.js" | prepend: site.baseurl }}></script>
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
