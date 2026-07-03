@@ -48,6 +48,10 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script src={{ "/libs/external/three.min.js" | prepend: site.baseurl }}></script>
 
+  <!-- model-viewer (bundled locally) for interactive NASA GLB planets
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script type="module" src={{ "/libs/external/model-viewer.min.js" | prepend: site.baseurl }}></script>
+
   <!-- Scripts
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <!--<link rel="stylesheet" href={{ "/libs/external/github-prettify-theme.css" | prepend: site.baseurl }}>-->
@@ -108,14 +112,6 @@
       </section>
     </div>
 
-    <!-- Full-width planet showcase: Earth · Moon · Mars -->
-    <div class="planet-showcase">
-      <canvas id="planet-canvas"></canvas>
-      <span class="planet-label" style="left:30%">Earth</span>
-      <span class="planet-label" style="left:50%">Moon</span>
-      <span class="planet-label" style="left:70%">Mars</span>
-    </div>
-
     <!-- Scene panels: solar system (left) and Mars rover (right) -->
     <div class="scene-panels">
       <div class="scene-panel">
@@ -142,6 +138,43 @@
     </nav>
 
     {{ content}}
+
+    <!-- NASA Moon (LRO 8K) -->
+    <div class="nasa-planet-viewer">
+      <p class="nasa-planet-label">Moon &mdash; NASA Lunar Reconnaissance Orbiter</p>
+      <model-viewer
+        src="{{ site.baseurl }}/assets/3D-models/Moon_NASA_LRO_8k_Flat.glb"
+        alt="NASA LRO 8K Moon model"
+        orientation="0deg 0deg 270deg"
+        shadow-intensity="0"
+        environment-image="neutral"
+        exposure="1.2"
+        camera-controls
+        touch-action="pan-y"
+        auto-rotate
+        auto-rotate-delay="800"
+        rotation-per-second="8deg"
+        loading="lazy">
+      </model-viewer>
+    </div>
+
+    <!-- NASA Mars -->
+    <div class="nasa-planet-viewer">
+      <p class="nasa-planet-label">Mars &mdash; NASA Science</p>
+      <model-viewer
+        src="{{ site.baseurl }}/assets/3D-models/24881_Mars_1_6792.glb"
+        alt="NASA Mars 3D model"
+        shadow-intensity="0"
+        environment-image="neutral"
+        exposure="1.4"
+        camera-controls
+        touch-action="pan-y"
+        auto-rotate
+        auto-rotate-delay="800"
+        rotation-per-second="7deg"
+        loading="lazy">
+      </model-viewer>
+    </div>
 
     <div class="footer">
       <div class="row">
@@ -183,7 +216,6 @@
   <script src={{ "/libs/custom/three_scene.js" | prepend: site.baseurl }}></script>
   <script src={{ "/libs/custom/solar_scene.js" | prepend: site.baseurl }}></script>
   <script src={{ "/libs/custom/rover_scene.js" | prepend: site.baseurl }}></script>
-  <script src={{ "/libs/custom/planet_scene.js" | prepend: site.baseurl }}></script>
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
