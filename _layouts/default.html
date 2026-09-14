@@ -48,9 +48,11 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script src={{ "/libs/external/three.min.js" | prepend: site.baseurl }}></script>
 
+  {% comment %}
   <!-- model-viewer (bundled locally) for interactive NASA GLB planets
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script type="module" src={{ "/libs/external/model-viewer.min.js" | prepend: site.baseurl }}></script>
+  {% endcomment %}
 
   <!-- Scripts
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -112,6 +114,7 @@
       </section>
     </div>
 
+    {% comment %}
     <!-- NASA Moon + Mars side by side -->
     <div class="scene-panels">
       <div class="scene-panel nasa-panel">
@@ -148,6 +151,7 @@
         </model-viewer>
       </div>
     </div>
+    {% endcomment %}
 
     <!--
     <div class="scene-panels">
